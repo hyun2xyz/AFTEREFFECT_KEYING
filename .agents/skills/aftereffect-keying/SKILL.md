@@ -1,0 +1,64 @@
+---
+name: aftereffect-keying
+description: Set up a clean Windows/macOS computer and teach green/blue screen keying with CorridorKey 2.0 (installed by the student from the official repository, NVIDIA GPU) or After Effects Keylight, alpha diagnostics and a Python-generated After Effects composite, while following the CorridorKey and footage licenses. Use in this repository for a student's shot; no AE MCP.
+---
+
+# Aftereffect Keying
+
+This is a repository-bound teaching skill. Run from the repository root that
+contains `scripts/setup_environment.py`. Rules live in
+[rules](../../../docs/rules.md); lesson order in [workflow](../../../docs/workflow.md).
+
+## First interaction
+
+1. Inspect the actual OS/shell, GPU and repository root. If tools are missing,
+   start with [START-HERE](../../../START-HERE.md) and read only the matching setup:
+   [Windows](../../../docs/setup-windows.md) or [macOS](../../../docs/setup-macos.md).
+2. Run `setup_environment.py --check`. CorridorKey's public Python release needs
+   an NVIDIA RTX 30-series or newer GPU; otherwise use After Effects Keylight.
+3. Before installing CorridorKey, summarize its license from rules section 1 and
+   install it only from the official repository into a separate folder and venv.
+4. Locate the student's clip and create `work/<shot>`. Keep the original intact.
+   Explain the next step in two or three sentences, then do only that step.
+
+## License rules
+
+- Never copy CorridorKey code, weights, its venv or the foundation-model weights
+  into this repository, a lesson bundle or a student deliverable.
+- Do not offer CorridorKey as a paid service or put it behind paid access. Any
+  released modification must be free, under the same license and keep the name.
+- Practice plates from Hollywood Camera Work are for local practice: do not
+  re-host them or publish direct download links; link only the source page.
+- Record the source and license of every background plate.
+
+## Keying rules
+
+- Record FPS, stored resolution, pixel aspect ratio and color space in
+  `shot.json`. Do not resize before keying.
+- Start with a short no-hint run (default despill 0.5, outputs alpha fg checker
+  cutout). Use a first-frame hint matte only when subject selection is wrong.
+- Remove rigs and stands with garbage masks, not by pushing keyer settings.
+- Review on black, white and checker at start/middle/end and the busiest
+  frames; measure background-only alpha (should be 0) and solid-subject alpha
+  (near 1) over every frame and call them diagnostics without a ground-truth
+  matte. Play the result to check edge flicker. Fully decode every output.
+- In AE interpret alpha as Straight with the correct pixel aspect ratio and
+  FPS; do not double-convert sRGB/linear. Keep key, background, contact shadow
+  and grade as separate editable layers. Check the last frame of the final file.
+- Build the AE project from Python-generated JSX run by the student through
+  File > Scripts > Run Script File, or let the student import manually. No MCP,
+  persistent bridge, overwrite of open projects, automatic save or render.
+- A composite that does not look convincing is a failure even when technical
+  checks pass.
+
+## Context and long work
+
+Run CorridorKey in the background with its own venv, one clip at a time; read
+`processing.log` and short JSON summaries instead of long logs. After each lesson
+write `work/<shot>/next.md`: files, what was verified, visible problems, one next step.
+
+## Growing the skill
+
+Move a step into `scripts/` only after it worked on a real shot. Keep shot values
+in `shot.json`. Add new failure patterns and fixes to `docs/rules.md` with the shot
+they came from.

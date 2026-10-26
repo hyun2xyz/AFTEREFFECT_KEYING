@@ -1,0 +1,4 @@
+interface:
+  display_name: "Aftereffect Keying"
+  short_description: "CorridorKey 2.0 또는 Keylight로 그린스크린을 키잉하고 애펙에서 합성하는 수업용 스킬"
+  default_prompt: "Use $aftereffect-keying to check my computer and guide one lesson at a time from my green screen clip to an After Effects composite."
