@@ -11,14 +11,22 @@
 
 ## 학생은 이렇게 시작합니다
 
-[START-HERE.md](START-HERE.md)부터 시작합니다. Codex 또는 Claude Code에서 압축을 푼
-저장소 폴더를 열고 다음처럼 요청하세요.
+공통강의의 Git 세팅을 마친 컴퓨터에서, 이 저장소를 내 GitHub 계정에 **포크**해서 시작합니다.
+
+1. Codex 또는 Claude Code에 붙여 넣습니다.
+
+   > https://github.com/hyun2xyz/AFTEREFFECT_KEYING 를 제 GitHub 계정으로 포크해서 문서(Documents) 폴더에
+   > 받아 주세요. 끝나면 origin과 upstream 주소를 보여 주세요.
+
+2. 받은 `AFTEREFFECT_KEYING` 폴더를 Codex에서 다시 열고 [START-HERE.md](START-HERE.md)의 문장이나
+   다음처럼 요청합니다.
 
 > START-HERE.md, AGENTS.md와 공유 스킬을 읽고 제 컴퓨터와 GPU부터 확인해 주세요.
 > CorridorKey 라이선스를 먼저 요약해 주고, 필요한 것만 공식 출처에서 설치 안내해 주세요.
 > 제가 주는 짧은 그린스크린 영상을 키잉하고 AE에서 배경을 바꾸는 과정을 한 단계씩
 > 진행해 주세요. 원본은 보존하고, 확인한 범위와 남은 문제를 구분해 알려 주세요.
 
+- [포크로 시작하고 업데이트 받기](docs/fork-and-update.md)
 - [Windows 준비(NVIDIA)](docs/setup-windows.md)
 - [Mac 준비(Keylight 경로)](docs/setup-macos.md)
 - [키잉 규칙과 라이선스](docs/rules.md)

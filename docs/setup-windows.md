@@ -2,7 +2,7 @@
 
 Windows 10/11 x64와 **NVIDIA RTX 30 시리즈 이상** GPU 기준입니다(CorridorKey 공식 조건:
 1440p까지 VRAM 4 GB, 4K는 6 GB). NVIDIA GPU가 없으면 4장의 CorridorKey를 건너뛰고
-After Effects Keylight로 진행합니다. [START-HERE](../START-HERE.md)대로 압축을 푼 폴더를
+After Effects Keylight로 진행합니다. [START-HERE](../START-HERE.md)대로 포크해서 받은 저장소 폴더를
 에이전트와 PowerShell의 작업 폴더로 선택합니다.
 
 ```powershell
