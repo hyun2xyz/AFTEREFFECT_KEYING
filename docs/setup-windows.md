@@ -49,7 +49,7 @@ py -3.12 -B scripts/setup_environment.py --configure --ffmpeg $Ffmpeg --ffprobe 
 py -3.12 -B scripts/setup_environment.py --install
 ```
 
-`.venv`에는 검사용 NumPy·Pillow만 설치합니다. CorridorKey는 아래처럼 **별도 폴더와
+`.venv`에는 검사용 NumPy·Pillow와 Keylight 측정(`scripts/keylight.py`)용 OpenCV만 설치합니다. CorridorKey는 아래처럼 **별도 폴더와
 별도 환경**에 설치합니다(PyTorch CUDA 버전이 섞이지 않게).
 
 ## 4. CorridorKey 2.0 (공식 저장소에서 직접)
@@ -84,6 +84,9 @@ Push-Location $Ck
 & $CkPython infer.py --input <짧은_영상_또는_프레임_폴더> --output_dir <work\shot\key> --num_frames 24 --start_mode middle
 Pop-Location
 ```
+
+AE에 얹을 최고 화질 알파는 EXR로 받습니다: `--outputs alpha cutout --output_format exr --exr_dtype float`.
+컷아웃 폴더를 `scripts/ae_comp.py keying --key`에 주면 32 bpc 선형 프로젝트로 맞춥니다([ae-comp 6장](ae-comp.md#6-corridorkey-최고-화질-알파exr-얹기)).
 
 ## 5. After Effects와 연습 영상
 

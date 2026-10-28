@@ -28,7 +28,9 @@ ffprobe로 FPS·저장 해상도·픽셀 종횡비를 읽어 `shot.json`에 적�
 ## 2. 짧은 시험 키잉
 
 CorridorKey를 힌트 없이 24프레임 정도로 먼저 실행합니다. Mac에서는 유료판을 산 경우에만 CorridorKey를 쓰고,
-아니면(또는 NVIDIA GPU가 없으면) AE에서 Keylight로 같은 구간을 시험합니다. 결과를 검정·흰색·체커 위에서 함께 봅니다.
+아니면(또는 NVIDIA GPU가 없으면) AE에서 Keylight로 같은 구간을 시험합니다. Keylight는 `scripts/keylight.py`로 라운드마다
+수치와 확인 프레임을 남기며 맞춥니다([ae-comp 5장](ae-comp.md#5-keylight로-키-빼기keylight-프리셋)).
+결과를 검정·흰색·체커 위에서 함께 봅니다.
 
 ## 3. 전체 키잉
 
@@ -41,7 +43,8 @@ CorridorKey를 힌트 없이 24프레임 정도로 먼저 실행합니다. Mac�
 
 ## 5. AE 합성
 
-`scripts/ae_comp.py`가 만든 JSX로 원본(꺼 둔 비교용)·배경·키 레이어 컴프를 만듭니다. Interpret
+CorridorKey는 EXR(float)로 출력해 `scripts/ae_comp.py keying`에 넣습니다([ae-comp 6장](ae-comp.md#6-corridorkey-최고-화질-알파exr-얹기)).
+Keylight로 뺐다면 `keylight` 프리셋 컴프가 이미 합성 컴프입니다. `keying`이 만든 JSX로 원본(꺼 둔 비교용)·배경·키 레이어 컴프를 만듭니다. Interpret
 Footage(알파 Straight, 픽셀 종횡비, FPS)까지 들어갑니다([AE 컴프 만들기](ae-comp.md)). 그 위에
 접지 그림자 → 색·블러·그레인을 맞춥니다. 학생이 렌더하고, 에이전트가 마지막 프레임과 색 태그까지 검수합니다.
 

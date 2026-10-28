@@ -46,6 +46,13 @@ contains `scripts/setup_environment.py`. Rules live in
 - Start with a short no-hint run (default despill 0.5, outputs alpha fg checker
   cutout). Use a first-frame hint matte only when subject selection is wrong.
 - Remove rigs and stands with garbage masks, not by pushing keyer settings.
+- Keylight in AE (no NVIDIA GPU, or a Mac): tune in measured rounds with
+  `scripts/keylight.py` (plan, round, run, analyze), go multipass when the
+  inside only closes with hard clipping, keep spill suppression on the pure
+  screen hue. Method and gates: [Keylight rounds](references/keylight.md).
+- CorridorKey's best-quality alpha for AE is the float EXR cutout
+  (`--outputs alpha cutout --output_format exr --exr_dtype float`); an EXR key
+  makes the `keying` comp 32 bpc, sRGB IEC61966-2.1, linear blending.
 - Review on black, white and checker at start/middle/end and the busiest
   frames; measure background-only alpha (should be 0) and solid-subject alpha
   (near 1) over every frame and call them diagnostics without a ground-truth
@@ -53,10 +60,11 @@ contains `scripts/setup_environment.py`. Rules live in
 - In AE interpret alpha as Straight with the correct pixel aspect ratio and
   FPS; do not double-convert sRGB/linear. Keep key, background, contact shadow
   and grade as separate editable layers. Check the last frame of the final file.
-- Build the AE project with `scripts/ae_comp.py` ([ae-comp](../../../docs/ae-comp.md)):
+- Build the AE project with `scripts/ae_comp.py keying|keylight` ([ae-comp](../../../docs/ae-comp.md)):
   it writes JSX the student runs in a new, empty project through
-  File > Scripts > Run Script File; then read `build_comp.result.json` with the
-  printed `job_id`, or let the student import manually. No MCP,
+  File > Scripts > Run Script File (or `keylight.py run` sends it to the running
+  AE); then read `build_comp.result.json` with the printed `job_id`, or let the
+  student import manually. No MCP,
   persistent bridge, overwrite of open projects, automatic save or render.
 - A composite that does not look convincing is a failure even when technical
   checks pass.

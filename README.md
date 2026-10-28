@@ -54,6 +54,7 @@ py -3.12 -B scripts/setup_environment.py --check
 .\.venv\Scripts\python.exe -B -m unittest discover -s tests -v
 ```
 
-`scripts/`에는 설치 점검 도구와 AE 컴프 JSX 생성기(`ae_comp.py`, [사용법](docs/ae-comp.md))가 있습니다.
+`scripts/`에는 설치 점검 도구, AE 컴프 JSX 생성기(`ae_comp.py`), AE Keylight 측정 라운드 도구(`keylight.py`)가 있습니다
+([사용법](docs/ae-comp.md): Keylight 멀티패스 5장, CorridorKey EXR을 AE에 얹기 6장).
 실행 래퍼·알파 진단은 에이전트가 샷마다 `work/<shot>/`에 만들고, 실제 샷에서 통과한 것만 `scripts/`로 옮깁니다.
 [출처·라이선스](THIRD_PARTY_NOTICES.md)를 확인하세요.

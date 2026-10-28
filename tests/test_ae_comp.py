@@ -13,8 +13,6 @@ from pathlib import Path
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 import ae_comp  # noqa: E402
 
-PLATE = ae_comp.LAYERS[0]
-RESULTS = ae_comp.LAYERS[1:]
 
 
 def job_from_jsx(text):
@@ -22,8 +20,14 @@ def job_from_jsx(text):
     return json.loads(text[start:text.index(";\n", start)])
 
 
-class AeCompTests(unittest.TestCase):
+class AeCompCases:
+    """Run once per preset by the subclasses at the end of this file."""
+
+    preset = None
+
     def setUp(self):
+        self.spec = ae_comp.PRESETS[self.preset]
+        self.plate, self.results = self.spec["layers"][0], self.spec["layers"][1:]
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.work = Path(self.temp.name).resolve() / "work"
@@ -36,9 +40,9 @@ class AeCompTests(unittest.TestCase):
 
     def shot(self, shot="shot01", plate_frames=10, result_frames=6):
         shot_dir = self.work / shot
-        self.sequence(shot_dir / PLATE["default"], plate_frames)
-        argv = ["--shot", shot, "--work", str(self.work), "--fps", "30000/1001", "--no-dialogs"]
-        for spec in RESULTS:
+        self.sequence(shot_dir / self.plate["default"], plate_frames)
+        argv = [self.preset, "--shot", shot, "--work", str(self.work), "--fps", "30000/1001", "--no-dialogs"]
+        for spec in self.results:
             folder = self.sequence(shot_dir / "results" / spec["role"], result_frames, name=f"{spec['role']}.")
             argv += [f"--{spec['role']}", str(folder)]
         return shot_dir, argv
@@ -58,17 +62,26 @@ class AeCompTests(unittest.TestCase):
         text = jsx.read_bytes().decode("ascii")
         self.assertNotIn(ae_comp.PLACEHOLDER, text)
         job = job_from_jsx(text)
-        self.assertEqual([layer["name"] for layer in job["layers"]], [spec["name"] for spec in ae_comp.LAYERS])
-        self.assertEqual([layer["frames"] for layer in job["layers"]], [10] + [6] * len(RESULTS))
+        self.assertEqual([layer["name"] for layer in job["layers"]], [spec["name"] for spec in self.spec["layers"]])
+        self.assertEqual([layer["frames"] for layer in job["layers"]], [10] + [6] * len(self.results))
         self.assertEqual(job["fps_ratio"], [30000, 1001])
-        self.assertEqual(job["project"], ae_comp.PROJECT)
+        self.assertEqual(job["project"], self.spec["project"])
+        self.assertEqual(job["preset"], self.preset)
         self.assertEqual(Path(job["receipt"]), shot_dir / "ae" / "build_comp.result.json")
         self.assertTrue(job["layers"][0]["path"].endswith("frame_0001.png"))
         self.assertFalse(job["dialogs"])
 
+    def test_alert_only_when_the_result_file_cannot_be_written(self):
+        template = ae_comp.TEMPLATE.read_text(encoding="utf-8")
+        self.assertEqual(template.count("alert("), 1)
+        guard = template.index("if (!recorded && job.dialogs)")
+        self.assertLess(guard, template.index("alert("))
+        _, argv = self.shot(plate_frames=10, result_frames=6)
+        self.assertTrue(self.job([a for a in argv if a != "--no-dialogs"])["dialogs"])
+
     def test_result_start_frame_must_fit_the_plate(self):
         _, argv = self.shot(plate_frames=10, result_frames=6)
-        role = RESULTS[-1]["role"]
+        role = self.results[-1]["role"]
         job = self.job(argv + [f"--{role}-start", "4"])
         self.assertEqual(job["layers"][-1]["start_frame"], 4)
         with self.assertRaisesRegex(ae_comp.CompError, "does not fit"):
@@ -81,7 +94,7 @@ class AeCompTests(unittest.TestCase):
         argv = argv[:argv.index("--fps")] + argv[argv.index("--fps") + 2:]
         with self.assertRaisesRegex(ae_comp.CompError, "--fps"):
             self.job(argv)
-        (shot_dir / ae_comp.CONTRACT).write_text('{"fps": [24000, 1001]}', encoding="utf-8")
+        (shot_dir / self.spec["contract"]).write_text('{"fps": [24000, 1001]}', encoding="utf-8")
         self.assertEqual(self.job(argv)["fps_ratio"], [24000, 1001])
 
     def test_ratio_forms(self):
@@ -94,7 +107,7 @@ class AeCompTests(unittest.TestCase):
 
     def test_sequence_gaps_mixed_names_and_movies_are_rejected(self):
         shot_dir, argv = self.shot()
-        plate = shot_dir / PLATE["default"]
+        plate = shot_dir / self.plate["default"]
         (plate / "frame_0005.png").unlink()
         with self.assertRaisesRegex(ae_comp.CompError, "missing frame numbers \\[5\\]"):
             self.job(argv)
@@ -109,7 +122,7 @@ class AeCompTests(unittest.TestCase):
         (plate / "notes.txt").unlink()
         (plate / ".DS_Store").write_bytes(b"")
         self.assertEqual(self.job(argv)["layers"][0]["frames"], 10)
-        role = RESULTS[-1]["role"]
+        role = self.results[-1]["role"]
         movie = shot_dir / "source" / "clip.mov"
         movie.parent.mkdir()
         movie.write_bytes(b"")
@@ -120,7 +133,7 @@ class AeCompTests(unittest.TestCase):
         shot_dir, argv = self.shot()
         image = shot_dir / "still.png"
         image.write_bytes(b"")
-        for spec in RESULTS:
+        for spec in self.results:
             if spec.get("still"):
                 job = self.job(argv + [f"--{spec['role']}", str(image)])
                 layer = next(layer for layer in job["layers"] if layer["name"] == spec["name"])
@@ -129,13 +142,14 @@ class AeCompTests(unittest.TestCase):
                 with self.assertRaises(ae_comp.CompError):
                     self.job(argv + [f"--{spec['role']}", str(image)])
 
-    @unittest.skipUnless(ae_comp.PIXEL_ASPECT_OPTION, "no pixel aspect option in this repository")
     def test_pixel_aspect_applies_to_plate_and_results_only(self):
+        if not self.spec["pixel_aspect"]:
+            self.skipTest("no pixel aspect option in this preset")
         shot_dir, argv = self.shot()
         job = self.job(argv + ["--pixel-aspect", "3/2"])
-        expected = {spec["name"]: 1.5 if spec.get("from_plate", True) else None for spec in ae_comp.LAYERS}
+        expected = {spec["name"]: 1.5 if spec.get("from_plate", True) else None for spec in self.spec["layers"]}
         self.assertEqual({layer["name"]: layer["pixel_aspect"] for layer in job["layers"]}, expected)
-        (shot_dir / ae_comp.CONTRACT).write_text('{"pixel_aspect": [3, 2]}', encoding="utf-8")
+        (shot_dir / self.spec["contract"]).write_text('{"pixel_aspect": [3, 2]}', encoding="utf-8")
         self.assertEqual(self.job(argv)["layers"][0]["pixel_aspect"], 1.5)
 
     def test_non_ascii_shot_and_path_are_escaped(self):
@@ -154,7 +168,7 @@ class AeCompTests(unittest.TestCase):
             bad[bad.index("--shot") + 1] = name
             with self.assertRaisesRegex(ae_comp.CompError, "shot name"):
                 self.job(bad)
-        role = RESULTS[-1]["role"]
+        role = self.results[-1]["role"]
         code, err = self.generate(argv + [f"--{role}", str(self.work / "nowhere")])
         self.assertEqual(code, 2)
         self.assertIn("path not found", err)
@@ -178,6 +192,16 @@ class AeCompTests(unittest.TestCase):
         shutil.copyfile(shot_dir / "ae" / "build_comp.jsx", script)
         result = subprocess.run([shutil.which("node"), "--check", str(script)], capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
+
+
+class KeyingTests(AeCompCases, unittest.TestCase):
+    preset = "keying"
+
+    def test_preset_name_may_be_left_out(self):
+        # The starter's original command: scripts/ae_comp.py --shot ... --key ...
+        _, argv = self.shot()
+        self.assertEqual(ae_comp.parse_args(argv[1:]).preset, "keying")
+        self.assertEqual(self.job(argv[1:])["comp_name"], self.job(argv)["comp_name"])
 
 
 if __name__ == "__main__":

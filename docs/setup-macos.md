@@ -64,7 +64,7 @@ TASK_PYTHON="$("$TASK_BREW" --prefix python@3.13)/bin/python3.13"
 ```
 
 `nvidia_smi`가 없다는 표시는 Mac에서 정상이며 검사 실패가 아닙니다.
-`.venv`에는 검사용 NumPy·Pillow만 설치합니다.
+`.venv`에는 검사용 NumPy·Pillow와 Keylight 측정(`scripts/keylight.py`)용 OpenCV만 설치합니다.
 
 ## 2. After Effects와 연습 영상
 

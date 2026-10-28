@@ -39,6 +39,7 @@
 | FFmpeg | https://ffmpeg.org/legal.html | 빌드 옵션에 따라 LGPL/GPL 등 확인; 바이너리 미포함 |
 | NumPy | https://github.com/numpy/numpy/blob/main/LICENSE.txt | BSD-3-Clause; pip 설치 |
 | Pillow | https://pillow.readthedocs.io/en/stable/about.html#license | MIT-CMU; pip 설치 |
+| OpenCV (opencv-python-headless) | https://github.com/opencv/opencv-python/blob/4.x/LICENSE.txt | Apache-2.0(OpenCV 4.5 이상), 함께 묶인 라이브러리는 각자의 라이선스; pip 설치 |
 
 ## 참고한 기록
 

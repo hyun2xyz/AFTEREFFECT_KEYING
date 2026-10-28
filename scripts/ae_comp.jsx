@@ -7,7 +7,7 @@
     var job = /*__COMP_JOB__*/;
     var project = app.project, created = [], previous = null;
     var report = {schema: "ae-comp.v1", job_id: job.job_id, shot: job.shot, status: "failed",
-                  ae_version: app.version, project: null, comp: null, layers: [], error: null};
+                  ae_version: app.version, project: null, comp: null, layers: [], keylight: null, error: null};
 
     function encode(v) {
         var parts = [], k;
@@ -74,6 +74,33 @@
         return item;
     }
 
+    // The Keylight preset keys the plate in AE with the effects in job.keylight, each set by parameter
+    // match name. The garbage polygon is a hidden shape layer used as the plate's alpha track matte, so
+    // it cuts after Keylight and its soft edge falls on screen that is already transparent.
+    function applyKeylight(comp, layer, spec) {
+        if (spec.garbage) {
+            var matte = comp.layers.addShape();
+            matte.name = "Garbage Matte";
+            var group = matte.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+            var path = group.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Group");
+            var shape = new Shape();
+            shape.vertices = spec.garbage;
+            shape.closed = true;
+            path.property("ADBE Vector Shape").setValue(shape);
+            group.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+            matte.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]);
+            matte.moveBefore(layer);
+            layer.setTrackMatte(matte, TrackMatteType.ALPHA);
+            matte.enabled = false;
+        }
+        for (var i = 0; i < spec.effects.length; i++) {
+            var e = spec.effects[i], fx = layer.property("ADBE Effect Parade").addProperty(e.match);
+            fx.name = e.name;
+            for (var key in e.params) if (e.params.hasOwnProperty(key)) fx.property(key).setValue(e.params[key]);
+            fx.enabled = e.enabled;
+        }
+    }
+
     function build() {
         if (project.numItems !== 0) fail(job.messages.not_empty);
         setProject();
@@ -81,14 +108,15 @@
         created.push(folder);
         var items = [], i;
         for (i = 0; i < job.layers.length; i++) items.push(importFootage(job.layers[i], folder));
-        var plate = items[0];
-        for (i = 1; i < items.length; i++) {
-            if (job.layers[i].from_plate && (items[i].width !== plate.width || items[i].height !== plate.height))
+        var plate = items[job.plate_index];
+        for (i = 0; i < items.length; i++) {
+            if (i !== job.plate_index && job.layers[i].from_plate &&
+                (items[i].width !== plate.width || items[i].height !== plate.height))
                 fail(job.layers[i].name + " is " + items[i].width + "x" + items[i].height +
                      ", plate is " + plate.width + "x" + plate.height);
         }
         var comp = project.items.addComp(job.comp_name, plate.width, plate.height, plate.pixelAspect,
-                                         job.layers[0].frames / job.fps, job.fps);
+                                         job.layers[job.plate_index].frames / job.fps, job.fps);
         created.push(comp);
         comp.parentFolder = folder;
         // job.layers runs bottom to top; each add() lands above the previous layer.
@@ -102,6 +130,7 @@
                 layer.startTime = spec.start_frame / job.fps;
             }
             layer.enabled = spec.enabled;
+            if (i === job.plate_index && job.keylight) applyKeylight(comp, layer, job.keylight);
         }
         return comp;
     }
@@ -112,12 +141,28 @@
         report.comp = {name: comp.name, width: comp.width, height: comp.height, pixel_aspect: comp.pixelAspect,
                        fps: comp.frameRate, frames: frames(comp.duration)};
         for (var i = comp.numLayers; i >= 1; i--) {
-            var layer = comp.layer(i), item = layer.source, source = item.mainSource;
+            var layer = comp.layer(i), item = layer.source;
+            if (!item || !(item.mainSource instanceof FileSource)) continue;  // the garbage matte is a shape layer
+            var source = item.mainSource;
             report.layers.push({name: layer.name, enabled: layer.enabled, in_frame: frames(layer.inPoint),
                                 out_frame: frames(layer.outPoint), source: source.file.fsName,
                                 alpha: alphaName(source), width: item.width, height: item.height,
                                 pixel_aspect: item.pixelAspect, frames: source.isStill ? 1 : frames(item.duration)});
         }
+        if (job.keylight) report.keylight = readKeylight(comp.layer(job.layers[job.plate_index].name), job.keylight);
+    }
+
+    function readKeylight(layer, spec) {
+        var matte = layer.hasTrackMatte ? layer.trackMatteLayer : null;
+        var out = {track_matte: matte ? {name: matte.name, type: String(layer.trackMatteType), enabled: matte.enabled} : null,
+                   effects: []};
+        for (var i = 0; i < spec.effects.length; i++) {
+            var fx = layer.property("ADBE Effect Parade").property(spec.effects[i].name), values = {};
+            for (var key in spec.effects[i].params)
+                if (spec.effects[i].params.hasOwnProperty(key)) values[key] = fx.property(key).value;
+            out.effects.push({name: fx.name, match: fx.matchName, enabled: fx.enabled, params: values});
+        }
+        return out;
     }
 
     function undo() {
@@ -153,9 +198,11 @@
         recorded = receipt.write(encode(report));
         receipt.close();
     }
-    if (job.dialogs) {
+    // Success and failure are reported only through the receipt. An alert appears only when the
+    // receipt could not be written, because nothing else would tell the user what happened.
+    if (!recorded && job.dialogs) {
         var text = report.status === "ok" ? job.messages.done : job.messages.failed + "\n" + report.error;
-        alert(recorded ? text : text + "\n\n" + job.messages.no_receipt);
+        alert(text + "\n\n" + job.messages.no_receipt);
     }
     return encode(report);
 })();

@@ -1,0 +1,368 @@
+{
+  "date": "2026-10-29",
+  "host": "macOS, After Effects 26.5x89, .venv Python 3.13 with OpenCV 4.14",
+  "media": "green screen practice plate, 1280x720, 30 fps, 180 frames (not shipped)",
+  "script": "scripts/ae_comp.py keylight + scripts/keylight.py plan/round/run/analyze + scripts/keylight_round.jsx",
+  "render_check": "CompItem.saveFrameToPng per round; AE viewer captured with computer use (Status and Final Result, frame 90)",
+  "project": {
+    "bits_per_channel": 16,
+    "working_space": "None",
+    "linear_blending": false
+  },
+  "comp": {
+    "name": "keylight_test_keylight",
+    "width": 1280,
+    "height": 720,
+    "pixel_aspect": 1,
+    "fps": 30,
+    "frames": 180
+  },
+  "layers": [
+    "Background",
+    "Plate"
+  ],
+  "build_keylight": {
+    "track_matte": {
+      "name": "Garbage Matte",
+      "type": "5013",
+      "enabled": false
+    },
+    "effects": [
+      [
+        "Keylight Core",
+        false
+      ],
+      [
+        "Keylight Edge",
+        true
+      ],
+      [
+        "Key Cleaner",
+        false
+      ],
+      [
+        "Spill",
+        true
+      ]
+    ]
+  },
+  "gate_per_frame": {
+    "bg_leak": 0.0005,
+    "garbage_leak": 0.0005,
+    "garbage_seam": 0.0005,
+    "core_holes": 0.0005
+  },
+  "this_repository_final_round": {
+    "request": {
+      "set": [
+        "edge.clip_black=20",
+        "edge.clip_white=100"
+      ],
+      "core": "on",
+      "garbage": false
+    },
+    "pass": true,
+    "frames": [
+      {
+        "frame": 0,
+        "bg_leak": 2e-05,
+        "bg_max": 0.0489,
+        "garbage_leak": 0.0,
+        "garbage_seam": 0.0,
+        "core_holes": 0.0,
+        "core_min": 1.0,
+        "edge_partial": 0.8224,
+        "spill_edge": 0.0,
+        "spill_solid": 0.0
+      },
+      {
+        "frame": 45,
+        "bg_leak": 8e-06,
+        "bg_max": 0.0616,
+        "garbage_leak": 0.0,
+        "garbage_seam": 0.0,
+        "core_holes": 0.0,
+        "core_min": 1.0,
+        "edge_partial": 0.8663,
+        "spill_edge": 0.0,
+        "spill_solid": 0.0
+      },
+      {
+        "frame": 90,
+        "bg_leak": 0.0,
+        "bg_max": 0.0,
+        "garbage_leak": 0.0,
+        "garbage_seam": 0.0,
+        "core_holes": 0.0,
+        "core_min": 1.0,
+        "edge_partial": 0.8656,
+        "spill_edge": 0.0,
+        "spill_solid": 0.0
+      },
+      {
+        "frame": 134,
+        "bg_leak": 8e-06,
+        "bg_max": 0.1238,
+        "garbage_leak": 0.0,
+        "garbage_seam": 0.0,
+        "core_holes": 0.0,
+        "core_min": 1.0,
+        "edge_partial": 0.8641,
+        "spill_edge": 0.0,
+        "spill_solid": 0.0
+      },
+      {
+        "frame": 179,
+        "bg_leak": 6.5e-05,
+        "bg_max": 0.0882,
+        "garbage_leak": 0.0,
+        "garbage_seam": 0.0,
+        "core_holes": 0.0,
+        "core_min": 1.0,
+        "edge_partial": 0.8747,
+        "spill_edge": 0.0,
+        "spill_solid": 0.0
+      }
+    ]
+  },
+  "round_history_before_porting": {
+    "note": "same ae_comp.jsx, keylight_round.jsx and keylight.py logic, same plate, run before the scripts moved into this repository",
+    "rounds": [
+      {
+        "round": 1,
+        "request": {
+          "set": [],
+          "core": null,
+          "garbage": false
+        },
+        "pass": false,
+        "frames": [
+          {
+            "frame": 0,
+            "bg_leak": 0.47484,
+            "bg_max": 0.2391,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.216529,
+            "core_holes": 0.045742,
+            "core_min": 0.9211,
+            "edge_partial": 0.9469,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          },
+          {
+            "frame": 45,
+            "bg_leak": 0.474363,
+            "bg_max": 0.2492,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.221657,
+            "core_holes": 0.014866,
+            "core_min": 0.829,
+            "edge_partial": 0.9717,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          },
+          {
+            "frame": 90,
+            "bg_leak": 0.470072,
+            "bg_max": 0.1908,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.219465,
+            "core_holes": 0.038144,
+            "core_min": 0.8542,
+            "edge_partial": 0.9559,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          },
+          {
+            "frame": 134,
+            "bg_leak": 0.471374,
+            "bg_max": 0.2991,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.225482,
+            "core_holes": 0.0482,
+            "core_min": 0.8576,
+            "edge_partial": 0.969,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          },
+          {
+            "frame": 179,
+            "bg_leak": 0.471275,
+            "bg_max": 0.2705,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.229112,
+            "core_holes": 0.028176,
+            "core_min": 0.8896,
+            "edge_partial": 0.9754,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "request": {
+          "set": [
+            "edge.clip_black=20",
+            "edge.clip_white=85"
+          ],
+          "core": null,
+          "garbage": false
+        },
+        "pass": true,
+        "frames": [
+          {
+            "frame": 0,
+            "bg_leak": 2.8e-05,
+            "bg_max": 0.0602,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.0,
+            "core_holes": 0.0,
+            "core_min": 1.0,
+            "edge_partial": 0.6101,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          },
+          {
+            "frame": 45,
+            "bg_leak": 8e-06,
+            "bg_max": 0.0758,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.0,
+            "core_holes": 0.00027,
+            "core_min": 0.9677,
+            "edge_partial": 0.6646,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          },
+          {
+            "frame": 90,
+            "bg_leak": 0.0,
+            "bg_max": 0.0,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.0,
+            "core_holes": 0.0,
+            "core_min": 1.0,
+            "edge_partial": 0.6849,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          },
+          {
+            "frame": 134,
+            "bg_leak": 8e-06,
+            "bg_max": 0.1524,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.0,
+            "core_holes": 0.0,
+            "core_min": 1.0,
+            "edge_partial": 0.6847,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          },
+          {
+            "frame": 179,
+            "bg_leak": 6.5e-05,
+            "bg_max": 0.1085,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.0,
+            "core_holes": 0.0,
+            "core_min": 1.0,
+            "edge_partial": 0.6955,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          }
+        ]
+      },
+      {
+        "round": 3,
+        "request": {
+          "set": [
+            "edge.clip_white=100"
+          ],
+          "core": "on",
+          "garbage": false
+        },
+        "pass": true,
+        "frames": [
+          {
+            "frame": 0,
+            "bg_leak": 2e-05,
+            "bg_max": 0.0489,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.0,
+            "core_holes": 0.0,
+            "core_min": 1.0,
+            "edge_partial": 0.8224,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          },
+          {
+            "frame": 45,
+            "bg_leak": 8e-06,
+            "bg_max": 0.0616,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.0,
+            "core_holes": 0.0,
+            "core_min": 1.0,
+            "edge_partial": 0.8663,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          },
+          {
+            "frame": 90,
+            "bg_leak": 0.0,
+            "bg_max": 0.0,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.0,
+            "core_holes": 0.0,
+            "core_min": 1.0,
+            "edge_partial": 0.8656,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          },
+          {
+            "frame": 134,
+            "bg_leak": 8e-06,
+            "bg_max": 0.1238,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.0,
+            "core_holes": 0.0,
+            "core_min": 1.0,
+            "edge_partial": 0.8641,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          },
+          {
+            "frame": 179,
+            "bg_leak": 6.5e-05,
+            "bg_max": 0.0882,
+            "garbage_leak": 0.0,
+            "garbage_seam": 0.0,
+            "core_holes": 0.0,
+            "core_min": 1.0,
+            "edge_partial": 0.8747,
+            "spill_edge": 0.0,
+            "spill_solid": 0.0
+          }
+        ]
+      }
+    ]
+  },
+  "spill_key_colour": {
+    "note": "Advanced Spill Suppressor Ultra, earlier rounds on the same plate, analyze's spill_edge definition",
+    "tinted_soft_edge_share_off": "1.2-2.3%",
+    "measured_screen_colour": "0.6-1.5%",
+    "pure_green_0_1_0": "0%"
+  },
+  "also_checked": [
+    "Keylight Outside Mask left a partial-alpha line along the mask edge; the shape-layer track matte does not",
+    "viewer does not repaint while the Run Script File dialog is open or the window is off-Space",
+    "round scripts restore views, background switch and core/edge enabled states"
+  ],
+  "not_verified": [
+    "Windows After Effects for keylight.py run --afterfx",
+    "hair-heavy or blue screen plates",
+    "playback flicker beyond the five check frames",
+    "AE versions other than 26.5"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-29",
+  "host": "macOS, After Effects 26.5x89",
+  "media": "synthetic float32 EXR cutout sequence in CorridorKey 2.0's EXR layout (<clip>_cutout_exr/cutout_000000.exr, BGRA, ZIP), 30 frames, 1280x720, with an HDR patch (2.0) and a mid-grey patch",
+  "script": "scripts/ae_comp.py keying --key <cutout_exr folder> (same generator and ae_comp.jsx, run before the scripts moved into this repository)",
+  "render_check": "CompItem.saveFrameToPng, 16-bit PNG; in 32 bpc its colour channels hold value/10, alpha unscaled",
+  "project": {
+    "bits_per_channel": 32,
+    "working_space": "sRGB IEC61966-2.1",
+    "linear_blending": true
+  },
+  "comp": {
+    "name": "exr_test_key",
+    "width": 1280,
+    "height": 720,
+    "pixel_aspect": 1,
+    "fps": 30,
+    "frames": 30
+  },
+  "layers": [
+    {
+      "name": "Plate (reference)",
+      "alpha": "ignore",
+      "frames": 30
+    },
+    {
+      "name": "Background",
+      "alpha": "ignore",
+      "frames": 1
+    },
+    {
+      "name": "Key",
+      "alpha": "straight",
+      "frames": 30
+    }
+  ],
+  "checks": {
+    "key_max_abs_diff_vs_srgb_encoded_exr_x10": 0.0015,
+    "key_mean_abs_diff_x10": 0.00013,
+    "hdr_patch_2.0": "1.353 sRGB-encoded (unclipped)",
+    "alpha_max_abs_diff": 0.0,
+    "background_ratio_x10_median": 0.9997
+  },
+  "not_verified": [
+    "real CorridorKey output (needs Windows + NVIDIA)",
+    "Windows After Effects",
+    "OCIO project stop"
+  ]
+}

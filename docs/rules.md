@@ -52,7 +52,7 @@ CorridorKey 저장소에도 포함되지 않음).
 | 단계 | 도구 | 역할 |
 | --- | --- | --- |
 | 키잉 | CorridorKey 2.0 (Python, NVIDIA RTX 30 이상) | 알파와 전경 색(despill 포함)을 추정 |
-| 대체 키잉 | After Effects Keylight | NVIDIA GPU가 없거나 비교가 필요할 때 |
+| 대체 키잉 | After Effects Keylight | NVIDIA GPU가 없거나(Mac 기본) 비교가 필요할 때. 측정 라운드·멀티패스 방법은 [ae-comp 5장](ae-comp.md#5-keylight로-키-빼기keylight-프리셋) |
 | 검사 | FFmpeg·ffprobe, Python(NumPy·Pillow) | 프레임·FPS·픽셀 비율 확인, 알파 진단, 전체 디코드 |
 | 합성 | After Effects | 원본 키 결과·배경·그림자를 분리한 편집 가능한 프로젝트 |
 
@@ -106,7 +106,10 @@ Mac이나 NVIDIA가 아닌 컴퓨터에서는 CorridorKey 오픈소스 Python판
   실행하거나 학생이 직접 가져옵니다. 열려 있는 작업을 덮어쓰지 않습니다.
 - 알파가 있는 출력(EXR 또는 ProRes 4444)을 가져와 **Interpret Footage**에서 알파를
   Straight로, 픽셀 종횡비와 FPS를 원본에 맞춥니다.
-- 선형 작업(16·32 bpc, linear blending)이면 `--cutout_linear`로 선형 컷아웃을 받거나,
+- 최고 화질은 EXR입니다: `--outputs alpha cutout --output_format exr --exr_dtype float`. 컷아웃 폴더를
+  `scripts/ae_comp.py keying --key`에 주면 32 bpc·sRGB IEC61966-2.1·linear blending 프로젝트로 맞춥니다
+  ([ae-comp 6장](ae-comp.md#6-corridorkey-최고-화질-알파exr-얹기)). EXR 컷아웃은 항상 선형입니다.
+- 영상(ProRes 4444) 컷아웃을 선형 작업(16·32 bpc, linear blending)에 쓰면 `--cutout_linear`로 선형 컷아웃을 받거나,
   기본 sRGB 컷아웃의 색 공간을 프로젝트에 맞게 해석합니다. 이중 변환하지 않습니다.
 - 배경은 원근·카메라 높이·빛 방향이 맞는 것을 고릅니다. 키 결과, 배경, 접지 그림자,
   색 보정을 각각 편집 가능한 레이어로 둡니다.

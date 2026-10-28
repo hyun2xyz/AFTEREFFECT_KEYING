@@ -48,7 +48,7 @@ APPS = {
     },
 }
 
-IMPORT_CHECKS = ["numpy", "PIL"]
+IMPORT_CHECKS = ["numpy", "PIL", "cv2"]  # cv2: scripts/keylight.py plan and analyze
 
 
 def venv_python():
