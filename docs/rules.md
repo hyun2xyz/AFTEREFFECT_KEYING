@@ -1,7 +1,8 @@
 # 키잉 규칙
 
 그린·블루스크린 촬영본에서 인물·물체를 분리하고 After Effects에서 새 배경과 합성하는
-규칙입니다. 기본 키어는 **CorridorKey 2.0**입니다. 기준 사례는 공개 그린스크린 연습
+규칙입니다. 기본 키어는 **CorridorKey 2.0** 오픈소스 Python판입니다(NVIDIA RTX 30 이상). 이 판은 Mac을 지원하지 않으므로
+Mac에서는 **Keylight**가 기본이고, CorridorKey는 유료판을 산 경우에만 씁니다. 기준 사례는 공개 그린스크린 연습
 영상 5개, 총 520프레임을 힌트 없이 처리한 테스트입니다(잔머리 80, 모션블러 50,
 금속 안경 90, 연기 120, 조명이 고르지 않은 전신 180프레임). 잔머리, 모션블러의
 반투명 경계, 렌즈·얇은 안경테, 연기, 얇은 천의 경계가 유지됐습니다. 연기·전신 샷에서는
@@ -55,8 +56,11 @@ CorridorKey 저장소에도 포함되지 않음).
 | 검사 | FFmpeg·ffprobe, Python(NumPy·Pillow) | 프레임·FPS·픽셀 비율 확인, 알파 진단, 전체 디코드 |
 | 합성 | After Effects | 원본 키 결과·배경·그림자를 분리한 편집 가능한 프로젝트 |
 
-Mac이나 NVIDIA가 아닌 컴퓨터에서는 CorridorKey Python판이 동작하지 않습니다. 이때는
-Keylight로 진행하거나, 학생이 선택해 공식 유료 플러그인·앱([corridorkey.com](https://corridorkey.com))을 씁니다.
+Mac이나 NVIDIA가 아닌 컴퓨터에서는 CorridorKey 오픈소스 Python판을 쓸 수 없습니다(공식 README는 NVIDIA CUDA GPU만
+명시). 이때는 Keylight로 진행합니다. **Mac에서 CorridorKey를 쓰려면 공식 유료 앱·플러그인을 학생이 구매해야
+합니다**([corridorkey.com](https://corridorkey.com), M 시리즈 Mac·macOS 14 이상, 2026-10-28 기준 베타, Intel Mac 미지원).
+설치·활성화·출력 형식은 [Mac 준비](setup-macos.md#corridorkey-유료판mac)에 있습니다. 이 저장소에서는 유료판을 실행해
+보지 않았습니다.
 
 ## 3. 소스 준비
 

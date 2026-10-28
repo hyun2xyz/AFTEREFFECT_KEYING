@@ -24,7 +24,8 @@
 ## 진행 순서
 
 1. 현재 OS의 [Windows setup](docs/setup-windows.md) 또는 [Mac setup](docs/setup-macos.md)만 읽습니다.
-   NVIDIA RTX 30 시리즈 이상이 없으면 Keylight 경로로 진행합니다.
+   NVIDIA RTX 30 시리즈 이상이 없으면 Keylight 경로로 진행합니다. Mac에서는 무료 CorridorKey가 실행되지 않으며,
+   쓰려면 공식 유료판을 직접 구매해야 합니다(Mac setup 참고).
 2. [workflow](docs/workflow.md)대로 내 영상과 `work/<shot>` 폴더를 정하고 `shot.json`을 적습니다.
 3. 짧은 시험 키잉 → 전체 키잉 → 검수 → AE 합성 순서로 진행합니다. 각 단계의 규칙은
    [rules](docs/rules.md)에 있습니다.

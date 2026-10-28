@@ -28,7 +28,7 @@
 
 - [포크로 시작하고 업데이트 받기](docs/fork-and-update.md)
 - [Windows 준비(NVIDIA)](docs/setup-windows.md)
-- [Mac 준비(Keylight 경로)](docs/setup-macos.md)
+- [Mac 준비(Keylight, 또는 CorridorKey 유료판 구매)](docs/setup-macos.md)
 - [키잉 규칙과 라이선스](docs/rules.md)
 - [첫 영상부터 AE까지](docs/workflow.md)
 - [AE 컴프 만들기](docs/ae-comp.md)

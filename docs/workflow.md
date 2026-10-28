@@ -27,8 +27,8 @@ ffprobe로 FPS·저장 해상도·픽셀 종횡비를 읽어 `shot.json`에 적�
 
 ## 2. 짧은 시험 키잉
 
-CorridorKey를 힌트 없이 24프레임 정도로 먼저 실행합니다. NVIDIA GPU가 없으면 AE에서
-Keylight로 같은 구간을 시험합니다. 결과를 검정·흰색·체커 위에서 함께 봅니다.
+CorridorKey를 힌트 없이 24프레임 정도로 먼저 실행합니다. Mac에서는 유료판을 산 경우에만 CorridorKey를 쓰고,
+아니면(또는 NVIDIA GPU가 없으면) AE에서 Keylight로 같은 구간을 시험합니다. 결과를 검정·흰색·체커 위에서 함께 봅니다.
 
 ## 3. 전체 키잉
 

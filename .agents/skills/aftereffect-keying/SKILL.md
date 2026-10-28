@@ -16,6 +16,14 @@ contains `scripts/setup_environment.py`. Rules live in
    [Windows](../../../docs/setup-windows.md) or [macOS](../../../docs/setup-macos.md).
 2. Run `setup_environment.py --check`. CorridorKey's public Python release needs
    an NVIDIA RTX 30-series or newer GPU; otherwise use After Effects Keylight.
+   On a Mac never install it or download its weights. Tell the student plainly
+   that CorridorKey on a Mac means buying the official paid app/plugin
+   (corridorkey.com; M-series, macOS 14+, no Intel Macs; beta in October 2026)
+   and that Keylight needs no purchase. Purchase, install and the activation key
+   are the student's; this repository has not tested the paid version. Its
+   Premultiplied output is not straight alpha: for `scripts/ae_comp.py --key`,
+   merge Straight FG with Matte into straight RGBA first
+   ([macOS setup](../../../docs/setup-macos.md)).
 3. Before installing CorridorKey, summarize its license from rules section 1 and
    install it only from the official repository into a separate folder and venv.
 4. Locate the student's clip and create `work/<shot>`. Keep the original intact.
