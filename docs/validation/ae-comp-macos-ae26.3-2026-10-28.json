@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-28",
+  "host": "macOS, After Effects 26.3x87",
+  "media": "synthetic PNG/JPEG sequences generated for the check",
+  "script": "scripts/ae_comp.py + scripts/ae_comp.jsx",
+  "render_check": "CompItem.saveFrameToPng, 8-bit PNG",
+  "project": {
+    "bits_per_channel": 16,
+    "working_space": "None",
+    "linear_blending": false
+  },
+  "comp": {
+    "width": 1280,
+    "height": 1080,
+    "pixel_aspect": 1.5,
+    "frames": 12
+  },
+  "layers": [
+    {
+      "name": "Plate (reference)",
+      "enabled": false,
+      "in_frame": 0,
+      "out_frame": 12,
+      "alpha": "ignore",
+      "frames": 12
+    },
+    {
+      "name": "Background",
+      "enabled": true,
+      "in_frame": 0,
+      "out_frame": 12,
+      "alpha": "ignore",
+      "frames": 1
+    },
+    {
+      "name": "Key",
+      "enabled": true,
+      "in_frame": 0,
+      "out_frame": 12,
+      "alpha": "straight",
+      "frames": 12
+    }
+  ],
+  "checks": {
+    "key_inner_max_diff_vs_source": 0,
+    "background_p99_diff_vs_par_scaled_source": 1.0,
+    "magenta_under_alpha0_pixels": 0,
+    "green_plate_pixels": 0,
+    "last_frame_has_key": true
+  },
+  "also_checked": {
+    "note": "shared ae_comp.jsx, run with the REMOVE preset",
+    "results": [
+      "non-empty project: stopped, nothing changed",
+      "failure after settings change: items removed, 8 bpc / no working space / linear off restored, no AE dialog"
+    ]
+  },
+  "not_verified": [
+    "Windows After Effects",
+    "real student footage",
+    "AE with script file writing disabled",
+    "OCIO project guard",
+    "AE versions other than 26.3"
+  ]
+}

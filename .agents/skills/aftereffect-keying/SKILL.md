@@ -45,8 +45,10 @@ contains `scripts/setup_environment.py`. Rules live in
 - In AE interpret alpha as Straight with the correct pixel aspect ratio and
   FPS; do not double-convert sRGB/linear. Keep key, background, contact shadow
   and grade as separate editable layers. Check the last frame of the final file.
-- Build the AE project from Python-generated JSX run by the student through
-  File > Scripts > Run Script File, or let the student import manually. No MCP,
+- Build the AE project with `scripts/ae_comp.py` ([ae-comp](../../../docs/ae-comp.md)):
+  it writes JSX the student runs in a new, empty project through
+  File > Scripts > Run Script File; then read `build_comp.result.json` with the
+  printed `job_id`, or let the student import manually. No MCP,
   persistent bridge, overwrite of open projects, automatic save or render.
 - A composite that does not look convincing is a failure even when technical
   checks pass.
