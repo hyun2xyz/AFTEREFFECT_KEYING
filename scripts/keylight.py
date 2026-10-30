@@ -45,6 +45,17 @@ DARK = 0.25      # a screen channel under this share of the screen colour's is s
 GATE = {"bg_leak": 0.0005, "garbage_leak": 0.0005, "garbage_seam": 0.0005, "core_holes": 0.0005}
 LOW, HIGH = 2 / 255, 253 / 255
 SPILL = 0.02     # soft-edge share above this gets the spill hint
+# The app name and the script path go to osascript as arguments, never into the script text, so a quote
+# in either cannot change the AppleScript. Same script as AFTEREFFECT_LAYA's terminal.py.
+MAC_SCRIPT = '''on run argv
+    set targetApp to item 1 of argv
+    set jsxFile to POSIX file (item 2 of argv)
+    using terms from application id "com.adobe.AfterEffects.application"
+        tell application targetApp
+            DoScriptFile jsxFile
+        end tell
+    end using terms from
+end run'''
 
 
 def fail(message):
@@ -368,7 +379,7 @@ def run(args):
         receipt.unlink()  # a receipt from an earlier run must not be read as this one
     if sys.platform == "darwin":
         app = args.app or running_ae()
-        command = ["osascript", "-e", f'tell application "{app}" to DoScriptFile "{jsx}"']
+        command = ["osascript", "-e", MAC_SCRIPT, app, str(jsx)]
     elif os.name == "nt":
         if not args.afterfx:
             fail("pass --afterfx with the path of AfterFX.exe (Support Files folder)")

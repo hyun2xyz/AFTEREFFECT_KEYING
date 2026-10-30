@@ -9,6 +9,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 import ae_comp  # noqa: E402
@@ -183,6 +184,24 @@ class RoundTests(KeylightCase):
             shutil.copyfile(jsx, script)
             result = subprocess.run([shutil.which("node"), "--check", str(script)], capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_mac_run_passes_app_and_path_as_arguments(self):
+        jsx = self.work / "Jo's shots" / "round_01.jsx"
+        jsx.parent.mkdir(parents=True)
+        jsx.write_text('var job = {"job_id": "0123456789ab"};', encoding="ascii")
+        app = 'Adobe After Effects 2026" to quit'
+        calls = []
+
+        def fake_run(command, **kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 1, "", "stopped by the test")
+
+        args = keylight.parse_args(["run", str(jsx), "--app", app])
+        with mock.patch.object(keylight.sys, "platform", "darwin"), \
+                mock.patch.object(keylight.subprocess, "run", fake_run):
+            with self.assertRaisesRegex(ae_comp.CompError, "stopped by the test"):
+                keylight.run(args)
+        self.assertEqual(calls, [["osascript", "-e", keylight.MAC_SCRIPT, app, str(jsx.resolve())]])
 
 
 @unittest.skipUnless(IMAGING, "NumPy and OpenCV not installed")
